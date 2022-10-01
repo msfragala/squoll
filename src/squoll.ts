@@ -1,5 +1,5 @@
 import { Pool } from "slother";
-import type { SquollWorker } from "./worker";
+import type { SquollWorker } from "@/worker";
 
 export class Squoll {
   #pool: SquollWorker;
