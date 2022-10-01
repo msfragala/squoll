@@ -1,5 +1,5 @@
 {
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "./codecs/**/*.ts"],
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./dist/types",
