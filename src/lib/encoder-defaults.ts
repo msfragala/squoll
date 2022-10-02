@@ -1,5 +1,6 @@
-import { AvifEncoderOptions } from "@/codecs/avif/avif_enc";
-import { WebpEncoderOptions } from "@/codecs/webp/webp_enc";
+import { AvifEncoderOptions } from "@/codecs/avif/enc";
+import { MozJpegEncoderOptions } from "@/codecs/mozjpeg/enc";
+import { WebpEncoderOptions } from "@/codecs/webp/enc";
 
 export const avif: AvifEncoderOptions = {
   cqLevel: 33,
@@ -42,4 +43,23 @@ export const webp: WebpEncoderOptions = {
   near_lossless: 100,
   use_delta_palette: 0,
   use_sharp_yuv: 0,
+};
+
+export const mozjpeg: MozJpegEncoderOptions = {
+  quality: 75,
+  baseline: false,
+  arithmetic: false,
+  progressive: true,
+  optimize_coding: true,
+  smoothing: 0,
+  color_space: 3,
+  quant_table: 3,
+  trellis_multipass: false,
+  trellis_opt_zero: false,
+  trellis_opt_table: false,
+  trellis_loops: 1,
+  auto_subsample: true,
+  chroma_subsample: 2,
+  separate_chroma_quality: false,
+  chroma_quality: 75,
 };
