@@ -1,28 +1,19 @@
 import { AvifEncoderOptions } from "@/codecs/avif/avif_enc";
+import { WebpEncoderOptions } from "@/codecs/webp/webp_enc";
 import { expose } from "slother";
-import { lazyEmscripten } from "./lib/lazy-emscripten";
+import { lazyEmscripten } from "@/lib/lazy-emscripten";
+import * as defaults from "@/lib/encoder-defaults";
 
 const avif_dec = lazyEmscripten(() => import("@/codecs/avif/avif_dec"));
 const avif_enc = lazyEmscripten(() => import("@/codecs/avif/avif_enc"));
-
-const defaultAvifEncoderOptions = {
-  cqLevel: 33,
-  cqAlphaLevel: -1,
-  denoiseLevel: 0,
-  tileColsLog2: 0,
-  tileRowsLog2: 0,
-  speed: 6,
-  subsample: 1,
-  chromaDeltaQ: false,
-  sharpness: 0,
-  tune: 0,
-};
+const webp_dec = lazyEmscripten(() => import("@/codecs/webp/webp_dec"));
+const webp_enc = lazyEmscripten(() => import("@/codecs/webp/webp_enc"));
 
 type Encoder<T> = (payload: {
   source: ImageData;
   options?: Partial<T>;
   wasmBinary: string;
-}) => Promise<Uint8Array | null>;
+}) => Promise<Blob | null>;
 
 type Decoder = (payload: {
   blob: File | Blob;
@@ -31,25 +22,55 @@ type Decoder = (payload: {
 
 export type SquollWorker = {
   decodeAvif: Decoder;
+  decodeWebp: Decoder;
   encodeAvif: Encoder<AvifEncoderOptions>;
+  encodeWebp: Encoder<WebpEncoderOptions>;
 };
 
 const worker: SquollWorker = {
   async decodeAvif({ blob, wasmBinary }) {
-    const factory = await avif_dec();
-    const codec = await factory(wasmBinary);
     const buffer = await blob.arrayBuffer();
-    return codec.decode(buffer);
+    return avif_dec()
+      .then((initCodec) => initCodec(wasmBinary))
+      .then((codec) => codec.decode(buffer));
+  },
+  async decodeWebp({ blob, wasmBinary }) {
+    const buffer = await blob.arrayBuffer();
+    return webp_dec()
+      .then((initCodec) => initCodec(wasmBinary))
+      .then((codec) => codec.decode(buffer));
   },
   async encodeAvif({ source, options, wasmBinary }) {
-    const factory = await avif_enc();
-    const codec = await factory(wasmBinary);
-    return codec.encode(
-      source.data,
-      source.width,
-      source.height,
-      Object.assign({}, defaultAvifEncoderOptions, options)
-    );
+    return avif_enc()
+      .then((initCodec) => initCodec(wasmBinary))
+      .then((codec) =>
+        codec.encode(
+          source.data,
+          source.width,
+          source.height,
+          Object.assign({}, defaults.avif, options)
+        )
+      )
+      .then((data) => {
+        if (!data) return null;
+        return new Blob([data], { type: "image/avif" });
+      });
+  },
+  async encodeWebp({ source, options, wasmBinary }) {
+    return webp_enc()
+      .then((initCodec) => initCodec(wasmBinary))
+      .then((codec) =>
+        codec.encode(
+          source.data,
+          source.width,
+          source.height,
+          Object.assign({}, defaults.webp, options)
+        )
+      )
+      .then((data) => {
+        if (!data) return null;
+        return new Blob([data], { type: "image/webp" });
+      });
   },
 };
 
