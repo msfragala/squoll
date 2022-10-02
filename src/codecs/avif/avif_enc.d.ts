@@ -4,7 +4,7 @@ export const enum AVIFTune {
   ssim,
 }
 
-export interface EncodeOptions {
+export interface AvifEncoderOptions {
   cqLevel: number;
   denoiseLevel: number;
   cqAlphaLevel: number;
@@ -17,15 +17,15 @@ export interface EncodeOptions {
   tune: AVIFTune;
 }
 
-export interface AVIFModule extends EmscriptenWasm.Module {
+export interface AvifEncoderModule extends EmscriptenWasm.Module {
   encode(
     data: BufferSource,
     width: number,
     height: number,
-    options: EncodeOptions,
+    options: AvifEncoderOptions
   ): Uint8Array | null;
 }
 
-declare var moduleFactory: EmscriptenWasm.ModuleFactory<AVIFModule>;
+declare var moduleFactory: EmscriptenWasm.ModuleFactory<AvifEncoderModule>;
 
 export default moduleFactory;
