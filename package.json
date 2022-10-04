@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "repository": "git@github.com:msfragala/squoll.git",
   "author": "Mitchell Fragala <ms.fragala@gmail.com>",
-  "description": "Convert and resize images directly in the browser, via lazy-loaed web worker pools",
+  "description": "Convert and resize images directly in the browser, via lazy-loaded web worker pools",
   "license": "MIT",
   "types": "./index.d.ts",
   "exports": {
@@ -24,6 +24,11 @@
     "./codecs/webp_dec.wasm": "./codecs/webp_dec.wasm",
     "./codecs/webp_enc.wasm": "./codecs/webp_enc.wasm"
   },
+  "files": [
+    "codecs",
+    "dist",
+    "index.d.ts"
+  ],
   "scripts": {
     "dev": "run-p dev:* demo",
     "dev:js": "node esbuild.mjs -w",
@@ -31,15 +36,23 @@
     "build": "rm -rf dist && npm run build:js && npm run build:types",
     "build:types": "tsc",
     "build:js": "node esbuild.mjs",
-    "demo": "(cd demo && pnpm run dev)"
+    "demo": "(cd demo && pnpm run dev)",
+    "prerelease": "pnpm run build",
+    "release": "np"
+  },
+  "np": {
+    "tests": false,
+    "yarn": false,
+    "message": "🚀 Release %s"
+  },
+  "peerDependencies": {
+    "slother": "^0.2.1"
   },
   "devDependencies": {
     "esbuild": "^0.15.9",
+    "np": "^7.6.2",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.8.4",
     "vite": "^3.1.4"
-  },
-  "dependencies": {
-    "slother": "^0.2.1"
   }
 }

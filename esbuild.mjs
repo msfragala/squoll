@@ -1,5 +1,6 @@
 import esbuild from "esbuild";
 import { resolve } from "path";
+import pkg from "./package.json" assert { type: "json" };
 
 /**
  * @type {import('esbuild').BuildOptions[]}
@@ -21,6 +22,7 @@ outputs.forEach((output) => {
   esbuild.build({
     ...output,
     entryPoints: [resolve("src/squoll.ts"), resolve("src/worker.ts")],
+    external: Object.keys(pkg.peerDependencies),
     bundle: true,
     minify: true,
     platform: "browser",
