@@ -4,20 +4,24 @@ import { AvifEncoderOptions } from "./codecs/avif/enc";
 import { WebpEncoderOptions } from "./codecs/webp/enc";
 import { MozJpegEncoderOptions } from "./codecs/mozjpeg/enc";
 
+export type WasmBinaries = {
+  avif_dec: string;
+  avif_enc: string;
+  mozjpeg_dec: string;
+  mozjpeg_enc: string;
+  oxipng_bg: string;
+  png_bg: string;
+  webp_dec: string;
+  webp_enc: string;
+};
+
 export class Squoll {
   #pool: SquollWorker;
-  #wasmBinaries: ConstructorParameters<typeof Squoll>[0]["wasmBinaries"];
+  #wasmBinaries: WasmBinaries;
 
   constructor(options: {
     worker: () => Promise<Worker>;
-    wasmBinaries: {
-      avif_dec: string;
-      avif_enc: string;
-      mozjpeg_dec: string;
-      mozjpeg_enc: string;
-      webp_dec: string;
-      webp_enc: string;
-    };
+    wasmBinaries: WasmBinaries;
   }) {
     this.#pool = Pool.proxy<SquollWorker>(options.worker);
     this.#wasmBinaries = options.wasmBinaries;
@@ -26,21 +30,28 @@ export class Squoll {
   async decodeAvif(blob: File | Blob) {
     return this.#pool.decodeAvif({
       blob,
-      wasmBinary: this.#wasmBinaries.avif_dec,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 
   async decodeMozjpeg(blob: File | Blob) {
     return this.#pool.decodeMozjpeg({
       blob,
-      wasmBinary: this.#wasmBinaries.mozjpeg_dec,
+      wasmBinaries: this.#wasmBinaries,
+    });
+  }
+
+  async decodePng(blob: File | Blob) {
+    return this.#pool.decodePng({
+      blob,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 
   async decodeWebp(blob: File | Blob) {
     return this.#pool.decodeWebp({
       blob,
-      wasmBinary: this.#wasmBinaries.webp_dec,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 
@@ -48,7 +59,7 @@ export class Squoll {
     return this.#pool.encodeAvif({
       source,
       options,
-      wasmBinary: this.#wasmBinaries.avif_enc,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 
@@ -59,7 +70,14 @@ export class Squoll {
     return this.#pool.encodeMozjpeg({
       source,
       options,
-      wasmBinary: this.#wasmBinaries.mozjpeg_enc,
+      wasmBinaries: this.#wasmBinaries,
+    });
+  }
+
+  async encodePng(source: ImageData) {
+    return this.#pool.encodePng({
+      source,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 
@@ -67,7 +85,7 @@ export class Squoll {
     return this.#pool.encodeWebp({
       source,
       options,
-      wasmBinary: this.#wasmBinaries.webp_enc,
+      wasmBinaries: this.#wasmBinaries,
     });
   }
 }

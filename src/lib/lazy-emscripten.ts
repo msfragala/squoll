@@ -9,3 +9,11 @@ export function lazyEmscripten<T extends EmscriptenWasm.Module>(
     return module;
   };
 }
+
+export function lazyImport<T>(importer: () => Promise<T>) {
+  let module: T;
+  return async () => {
+    module ??= await importer();
+    return module;
+  };
+}

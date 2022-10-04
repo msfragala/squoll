@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "immer": "^9.0.15",
     "squoll": "link:.."
   },
   "devDependencies": {

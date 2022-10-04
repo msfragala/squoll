@@ -14,7 +14,15 @@
     "./worker": {
       "import": "./dist/esm/worker.js",
       "node": "./dist/cjs/worker.js"
-    }
+    },
+    "./codecs/avif_dec.wasm": "./codecs/avif_dec.wasm",
+    "./codecs/avif_enc.wasm": "./codecs/avif_enc.wasm",
+    "./codecs/mozjpeg_dec.wasm": "./codecs/mozjpeg_dec.wasm",
+    "./codecs/mozjpeg_enc.wasm": "./codecs/mozjpeg_enc.wasm",
+    "./codecs/oxipng_bg.wasm": "./codecs/oxipng_bg.wasm",
+    "./codecs/png_bg.wasm": "./codecs/png_bg.wasm",
+    "./codecs/webp_dec.wasm": "./codecs/webp_dec.wasm",
+    "./codecs/webp_enc.wasm": "./codecs/webp_enc.wasm"
   },
   "scripts": {
     "dev": "run-p dev:* demo",
