@@ -22,37 +22,31 @@ export class Squoll {
   constructor(options: {
     worker: () => Promise<Worker>;
     wasmBinaries: WasmBinaries;
+    maxThreads?: number;
+    maxTasksPerThread?: number;
   }) {
-    this.#pool = Pool.proxy<SquollWorker>(options.worker);
     this.#wasmBinaries = options.wasmBinaries;
-  }
-
-  async decodeAvif(blob: File | Blob) {
-    return this.#pool.decodeAvif({
-      blob,
-      wasmBinaries: this.#wasmBinaries,
+    this.#pool = Pool.proxy<SquollWorker>(options.worker, {
+      maxConcurrentThreads: options.maxThreads,
+      maxConcurrentMessages: options.maxTasksPerThread,
     });
   }
 
-  async decodeMozjpeg(blob: File | Blob) {
-    return this.#pool.decodeMozjpeg({
-      blob,
-      wasmBinaries: this.#wasmBinaries,
-    });
-  }
-
-  async decodePng(blob: File | Blob) {
-    return this.#pool.decodePng({
-      blob,
-      wasmBinaries: this.#wasmBinaries,
-    });
-  }
-
-  async decodeWebp(blob: File | Blob) {
-    return this.#pool.decodeWebp({
-      blob,
-      wasmBinaries: this.#wasmBinaries,
-    });
+  async decode(blob: File | Blob) {
+    const wasmBinaries = this.#wasmBinaries;
+    switch (blob.type) {
+      case "image/jpeg":
+      case "image/jpg":
+        return this.#pool.decodeMozjpeg({ blob, wasmBinaries });
+      case "image/avif":
+        return this.#pool.decodeAvif({ blob, wasmBinaries });
+      case "image/webp":
+        return this.#pool.decodeWebp({ blob, wasmBinaries });
+      case "image/png":
+        return this.#pool.decodePng({ blob, wasmBinaries });
+      default:
+        return null;
+    }
   }
 
   async encodeAvif(source: ImageData, options?: Partial<AvifEncoderOptions>) {
@@ -63,7 +57,7 @@ export class Squoll {
     });
   }
 
-  async encodeMozjpeg(
+  async encodeJpeg(
     source: ImageData,
     options?: Partial<MozJpegEncoderOptions>
   ) {

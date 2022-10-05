@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "immer": "^9.0.15",
+    "slother": "^0.2.1",
     "squoll": "link:.."
   },
   "devDependencies": {

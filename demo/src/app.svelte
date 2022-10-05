@@ -15,7 +15,7 @@
   let results = [];
 
   const squoll = new Squoll({
-    worker: () => new Worker(workerURL),
+    worker: () => new Worker(workerURL, { type: "module" }),
     wasmBinaries: {
       avif_dec,
       avif_enc,
@@ -32,15 +32,7 @@
     const file = event.target.files[0];
     if (!file) return;
 
-    const decoders = {
-      "image/jpeg": "decodeMozjpeg",
-      "image/jpg": "decodeMozjpeg",
-      "image/avif": "decodeAvif",
-      "image/webp": "decodeWebp",
-      "image/png": "decodePng",
-    };
-
-    const decoded = await squoll[decoders[file.type]]?.(file);
+    const decoded = await squoll.decode(file);
 
     if (!decoded) {
       console.log("!! decoding failed for", file);
@@ -53,9 +45,9 @@
 
     await Promise.all([
       squoll.encodeAvif(decoded).then(updateResult),
-      squoll.encodeWebp(decoded).then(updateResult),
-      squoll.encodeMozjpeg(decoded).then(updateResult),
+      squoll.encodeJpeg(decoded).then(updateResult),
       squoll.encodePng(decoded).then(updateResult),
+      squoll.encodeWebp(decoded).then(updateResult),
     ]);
   }
 

@@ -4,6 +4,7 @@ specifiers:
   esbuild: ^0.15.9
   np: ^7.6.2
   npm-run-all: ^4.1.5
+  slother: ^0.2.1
   typescript: ^4.8.4
   vite: ^3.1.4
 
@@ -11,6 +12,7 @@ devDependencies:
   esbuild: 0.15.9
   np: 7.6.2
   npm-run-all: 4.1.5
+  slother: 0.2.1
   typescript: 4.8.4
   vite: 3.1.4
 
@@ -2622,6 +2624,10 @@ packages:
   /slice-ansi/0.0.4:
     resolution: {integrity: sha512-up04hB2hR92PgjpyU3y/eg91yIBILyjVY26NvvciY3EVVPjybkMszMpXQ9QAkcS3I5rtJBDLoTxxg+qvW8c7rw==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /slother/0.2.1:
+    resolution: {integrity: sha512-CUPmkyMgqnMlPoQIIaWM/nl9Lsxp1P+1qAgrw5UFy1ITklI7B1YGrnPuBXOPFMcUG0EaAj05B96EJfaWktWMkQ==}
     dev: true
 
   /source-map-js/1.0.2:
