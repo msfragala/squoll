@@ -1,6 +1,15 @@
 # Squoll 🌀
 
-Convert and resize images directly in the browser, via lazy-loaded web worker pools. ✨
+Convert and resize images directly in the browser, via lazy-loaded web worker pools ✨
+
+### Features
+
+- 🤯 Works directly in the process
+- 🥯 Convert images to AVIF, JPEG, PNG, and WebP
+- ↔️ Resize images to any width or height
+- 🔥 Processes images in multiple background threads for faster output
+- 🦥 Lazy-loads workers only once needed
+- ✨ Written in TypeScript
 
 ## Installation
 
