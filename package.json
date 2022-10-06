@@ -21,6 +21,7 @@
     "./codecs/mozjpeg_enc.wasm": "./codecs/mozjpeg_enc.wasm",
     "./codecs/oxipng_bg.wasm": "./codecs/oxipng_bg.wasm",
     "./codecs/png_bg.wasm": "./codecs/png_bg.wasm",
+    "./codecs/resize_bg.wasm": "./codecs/resize_bg.wasm",
     "./codecs/webp_dec.wasm": "./codecs/webp_dec.wasm",
     "./codecs/webp_enc.wasm": "./codecs/webp_enc.wasm"
   },

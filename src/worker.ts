@@ -15,6 +15,7 @@ const webp_dec = lazyEmscripten(() => import("@/codecs/webp/dec"));
 const webp_enc = lazyEmscripten(() => import("@/codecs/webp/enc"));
 const oxipng_bg = lazyImport(() => import("@/codecs/oxipng/oxipng"));
 const png_bg = lazyImport(() => import("@/codecs/png/png"));
+const resize_bg = lazyImport(() => import("@/codecs/resize/resize"));
 
 type Encoder<T> = (payload: {
   source: ImageData;
@@ -36,6 +37,12 @@ export type SquollWorker = {
   encodeMozjpeg: Encoder<MozJpegEncoderOptions>;
   encodeWebp: Encoder<WebpEncoderOptions>;
   encodePng: Encoder<OxipngOptions>;
+  resize(payload: {
+    source: ImageData;
+    width?: number;
+    height?: number;
+    wasmBinaries: WasmBinaries;
+  }): Promise<ImageData>;
 };
 
 const worker: SquollWorker = {
@@ -116,6 +123,28 @@ const worker: SquollWorker = {
       options?.interlace ?? false
     );
     return new Blob([optimized], { type: "image/png" });
+  },
+  async resize({ source, width, height, wasmBinaries }) {
+    if (!width && !height) return source;
+
+    const codec = await resize_bg();
+    await codec.default(wasmBinaries.resize_bg);
+
+    width ??= (height! / source.height) * source.width;
+    height ??= (width * source.height) / source.width;
+
+    const data = await codec.resize(
+      new Uint8Array(source.data.buffer),
+      source.width,
+      source.height,
+      width,
+      height,
+      3,
+      true,
+      true
+    );
+
+    return new ImageData(data, width, height);
   },
 };
 

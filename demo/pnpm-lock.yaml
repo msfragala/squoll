@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@sveltejs/vite-plugin-svelte': ^1.0.2
+  dashify: ^2.0.0
   immer: ^9.0.15
   slother: ^0.2.1
   squoll: link:..
@@ -9,6 +10,7 @@ specifiers:
   vite: ^3.1.0
 
 dependencies:
+  dashify: 2.0.0
   immer: 9.0.15
   slother: 0.2.1
   squoll: link:..
@@ -68,6 +70,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /dashify/2.0.0:
+    resolution: {integrity: sha512-hpA5C/YrPjucXypHPPc0oJ1l9Hf6wWbiOL7Ik42cxnsUOhWiCB/fylKbKqqJalW9FgkNQCw16YO8uW9Hs0Iy1A==}
+    engines: {node: '>=4'}
+    dev: false
 
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}

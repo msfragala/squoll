@@ -11,6 +11,7 @@ export type WasmBinaries = {
   mozjpeg_enc: string;
   oxipng_bg: string;
   png_bg: string;
+  resize_bg: string;
   webp_dec: string;
   webp_enc: string;
 };
@@ -47,6 +48,15 @@ export class Squoll {
       default:
         return null;
     }
+  }
+
+  async resize(source: ImageData, width: number, height: number) {
+    return this.#pool.resize({
+      source,
+      width,
+      height,
+      wasmBinaries: this.#wasmBinaries,
+    });
   }
 
   async encodeAvif(source: ImageData, options?: Partial<AvifEncoderOptions>) {
