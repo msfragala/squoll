@@ -59,8 +59,13 @@
         });
 
         squoll
-          .resize(decoded, size.w, size.h)
-          .then((data) => squoll.encode(data, `image/${type}`))
+          .resize({ source: decoded, width: size.w, height: size.h })
+          .then((data) =>
+            squoll.encode({
+              source: data,
+              type: `image/${type}`,
+            })
+          )
           .then((blob) => {
             results = produce(results, (state) => {
               if (!state[id] || !blob) return;

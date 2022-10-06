@@ -57,7 +57,15 @@ export class Squoll {
     }
   }
 
-  async resize(source: ImageData, width: number, height: number) {
+  async resize({
+    source,
+    width,
+    height,
+  }: {
+    source: ImageData;
+    width: number;
+    height: number;
+  }) {
     return this.#pool.resize({
       source,
       width,
@@ -66,15 +74,19 @@ export class Squoll {
     });
   }
 
-  async encode<T extends keyof EncoderOptions>(
-    source: ImageData,
-    type: T,
-    options?: EncoderOptions[T]
-  ) {
+  async encode<T extends keyof EncoderOptions>({
+    source,
+    type,
+    options,
+  }: {
+    source: ImageData;
+    type: T;
+    options?: EncoderOptions[T];
+  }) {
     switch (type) {
       case "image/avif": {
         return this.#pool.encodeAvif({
-          source,
+          source: source,
           options: options as Partial<AvifEncoderOptions>,
           wasmBinaries: this.#wasmBinaries,
         });
