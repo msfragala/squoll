@@ -16,6 +16,13 @@ export type WasmBinaries = {
   webp_enc: string;
 };
 
+type EncoderOptions = {
+  "image/avif": Partial<AvifEncoderOptions>;
+  "image/jpeg": Partial<MozJpegEncoderOptions>;
+  "image/webp": Partial<WebpEncoderOptions>;
+  "image/png": void;
+};
+
 export class Squoll {
   #pool: SquollWorker;
   #wasmBinaries: WasmBinaries;
@@ -59,37 +66,41 @@ export class Squoll {
     });
   }
 
-  async encodeAvif(source: ImageData, options?: Partial<AvifEncoderOptions>) {
-    return this.#pool.encodeAvif({
-      source,
-      options,
-      wasmBinaries: this.#wasmBinaries,
-    });
-  }
-
-  async encodeJpeg(
+  async encode<T extends keyof EncoderOptions>(
     source: ImageData,
-    options?: Partial<MozJpegEncoderOptions>
+    type: T,
+    options?: EncoderOptions[T]
   ) {
-    return this.#pool.encodeMozjpeg({
-      source,
-      options,
-      wasmBinaries: this.#wasmBinaries,
-    });
-  }
-
-  async encodePng(source: ImageData) {
-    return this.#pool.encodePng({
-      source,
-      wasmBinaries: this.#wasmBinaries,
-    });
-  }
-
-  async encodeWebp(source: ImageData, options?: Partial<WebpEncoderOptions>) {
-    return this.#pool.encodeWebp({
-      source,
-      options,
-      wasmBinaries: this.#wasmBinaries,
-    });
+    switch (type) {
+      case "image/avif": {
+        return this.#pool.encodeAvif({
+          source,
+          options: options as Partial<AvifEncoderOptions>,
+          wasmBinaries: this.#wasmBinaries,
+        });
+      }
+      case "image/jpeg": {
+        return this.#pool.encodeMozjpeg({
+          source,
+          options: options as Partial<MozJpegEncoderOptions>,
+          wasmBinaries: this.#wasmBinaries,
+        });
+      }
+      case "image/png": {
+        return this.#pool.encodePng({
+          source,
+          wasmBinaries: this.#wasmBinaries,
+        });
+      }
+      case "image/webp": {
+        return this.#pool.encodeWebp({
+          source,
+          options: options as Partial<WebpEncoderOptions>,
+          wasmBinaries: this.#wasmBinaries,
+        });
+      }
+      default:
+        return null;
+    }
   }
 }

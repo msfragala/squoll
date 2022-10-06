@@ -44,7 +44,12 @@
     results = {};
 
     const types = ["avif", "jpeg", "webp", "png"];
-    const sizes = [{ w: 600 }, { h: 400 }, { w: 200, h: 100 }];
+    const sizes = [
+      { w: 600 },
+      { h: 400 },
+      { w: 200, h: 100 },
+      { w: decoded.width, h: decoded.height },
+    ];
 
     types.forEach((type) => {
       sizes.forEach((size) => {
@@ -55,13 +60,7 @@
 
         squoll
           .resize(decoded, size.w, size.h)
-          .then((data) => {
-            if (type === "avif") return squoll.encodeAvif(data);
-            if (type === "jpeg") return squoll.encodeJpeg(data);
-            if (type === "webp") return squoll.encodeWebp(data);
-            if (type === "png") return squoll.encodePng(data);
-            throw new Error("No encoder matched");
-          })
+          .then((data) => squoll.encode(data, `image/${type}`))
           .then((blob) => {
             results = produce(results, (state) => {
               if (!state[id] || !blob) return;
