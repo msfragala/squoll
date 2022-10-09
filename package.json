@@ -1,6 +1,6 @@
 {
   "name": "squoll",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": "git@github.com:msfragala/squoll.git",
   "author": "Mitchell Fragala <ms.fragala@gmail.com>",
   "description": "Convert and resize images directly in the browser, via lazy-loaded web worker pools",
