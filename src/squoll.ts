@@ -63,8 +63,8 @@ export class Squoll {
     height,
   }: {
     source: ImageData;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   }) {
     return this.#pool.resize({
       source,

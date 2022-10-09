@@ -14,13 +14,13 @@ Convert and resize images directly in the browser, via lazy-loaded web worker po
 ## Installation
 
 ```
-npm install --save squoll
+npm install --save squoll slother
 ```
 ```
-pnpm add squoll
+pnpm add squoll slother
 ```
 ```
-yarn add squoll
+yarn add squoll slother
 ```
 
 ## Usage
