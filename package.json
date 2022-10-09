@@ -38,8 +38,7 @@
     "build:types": "tsc",
     "build:js": "node esbuild.mjs",
     "demo": "(cd demo && pnpm run dev)",
-    "prerelease": "pnpm run build",
-    "release": "np"
+    "release": "npm run build && np"
   },
   "np": {
     "tests": false,
